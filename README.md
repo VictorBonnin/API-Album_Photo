@@ -1,12 +1,12 @@
-# API Users
+# API Albums-Photos
 
 ## Overview
 The API allows users to retrieve all of the users of the application in micro service through a REST architecture. This API will be mainly used for registed Accounts.
 
 It will also create own users to recover data to the platform but is in no way related to the users collected via the crawling of profiles on Social Networks.
 
-### [POST] Create user
-Allows the creation of a single user.
+### [POST] Create Albums/Photos
+Allows the creation of a single album/photo.
 
 |                            |                  |
 |----------------------------|------------------|
@@ -14,31 +14,47 @@ Allows the creation of a single user.
 | Who can use it ?           | Owner and users  |
 | Response formats           | application/json |
 
-* HTTP request : POST → user/create
+* HTTP request : POST → albums/
+* HTTP request : POST → photos/:idAlbum
 
-#### Parameters :
+#### Parameters Albums:
 ```javascript
 {
-  'firstname': String, // Optional
-  'lastname': Number, // Optional
-  'age': Number, // Optional
-  'city': String // Optional
+  'Title': String, // Non Optional
+  'Description': String, // Optional
+  'Photos': Tableau // Optional
 }
 ```
 
-#### Response :
+#### Parameters Photos:
 ```javascript
-  {
-    id: Object_ID,
-    firstname: String,
-    lastname: String,
-    age: Number,
-    city: String
-  }
+{
+  'Title': String, // Non Optional
+  'Url': String, // Non Optional
+  'Description': String, // Optional
+  'Album': String // Non Optional
+}
+```
+#### Response Album:
+```javascript
+{
+  Title: String,
+  Description: String,
+  Photos: Tableau
+}
 ```
 
-### [POST] Show user
-Show an user by id.
+#### Response Photo:
+```javascript
+  {
+  Title: String,
+  Url: String,
+  Description: String,
+  Album: String
+  }
+```
+### [GET] Delete Albums/Photos
+Allows show a single album/photo.
 
 |                            |                  |
 |----------------------------|------------------|
@@ -46,31 +62,39 @@ Show an user by id.
 | Who can use it ?           | Owner and users  |
 | Response formats           | application/json |
 
-* HTTP request : GET → user/show/:id
+* HTTP request : GET → albums/:id
+* HTTP request : GET → photos/:id
 
-#### Parameters :
-```javascript
-{
-  id: String // Required
-}
-```
+### [PUT] Update Albums/Photos
+Allows to uptdate a single album/photo.
 
-#### Response :
-```javascript
-  {
-    id: Object_ID,
-    firstname: String,
-    lastname: String,
-    age: Number,
-    city: String
-  }
-```
+|                            |                  |
+|----------------------------|------------------|
+| Requires authentication ?  | No               |
+| Who can use it ?           | Owner and users  |
+| Response formats           | application/json |
+
+* HTTP request : PUT → albums/:id
+* HTTP request : PUT → photos/:id
+
+### [DELETE] Delete Albums/Photos
+Allows to delete a single album/photo.
+
+|                            |                  |
+|----------------------------|------------------|
+| Requires authentication ?  | No               |
+| Who can use it ?           | Owner and users  |
+| Response formats           | application/json |
+
+* HTTP request : DELETE → albums/:id
+* HTTP request : DELETE → photos/:id
 
 ### Requirements
 * node 18
 * npm or yarn or pnpm
 * git
 * mongodb (please configure config.js for link mongodb)
+* pm2
 
 ### Install
 ```npm i```
@@ -80,3 +104,6 @@ Show an user by id.
 
 ### Dev mode
 ```npm run dev```
+
+### Lunch with monitoring
+```pm2 start process.json```
