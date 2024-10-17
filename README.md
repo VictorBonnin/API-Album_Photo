@@ -107,3 +107,8 @@ Allows to delete a single album/photo.
 
 ### Lunch with monitoring
 ```pm2 start process.json```
+
+### With PM2 
+```npm install -g pm2```
+```pm2 link [id_link]```
+```pm2 start app.js```

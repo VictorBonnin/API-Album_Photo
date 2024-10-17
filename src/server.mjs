@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit'; 
 
 // Core
 import config from './config.mjs';
@@ -61,6 +62,18 @@ const Server = class Server {
     }
   }
 
+  security() {
+    this.app.use(helmet());
+    this.app.disable('x-powered-by');
+
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      message: "Trop de requêtes effectuées depuis cette IP, veuillez réessayer après 15 minutes."
+    });
+    this.app.use(limiter);
+  }
+
   middleware() {
     this.app.use(compression());
     this.app.use(cors());
@@ -70,9 +83,6 @@ const Server = class Server {
 
   routes() {
     new routes.Users(this.app, this.connect);
-    new routes.Albums(this.app, this.connect);
-    new routes.Photos(this.app, this.connect);
-
 
     this.app.use((req, res) => {
       res.status(404).json({
@@ -82,18 +92,15 @@ const Server = class Server {
     });
   }
 
-  security() {
-    this.app.use(helmet());
-    this.app.disable('x-powered-by');
-  }
-
   async run() {
     try {
       await this.dbConnect();
       this.security();
       this.middleware();
       this.routes();
-      this.app.listen(this.config.port);
+      this.app.listen(this.config.port, () => {
+        console.log(`[INFO] Server is running on port ${this.config.port}`);
+      });
     } catch (err) {
       console.error(`[ERROR] Server -> ${err}`);
     }
