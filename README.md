@@ -80,3 +80,9 @@ Show an user by id.
 
 ### Dev mode
 ```npm run dev```
+
+## With PM2
+# Go to the API directory
+````npm install -g pm2 ```
+````pm2 link [id_link] ```
+````pm2 start app.js ```
